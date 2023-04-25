@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,13 +22,14 @@ class _HomeState extends State<Home> {
     {"task": "Coding", "taskCompleted": true},
     {"task": "Do Exercise", "taskCompleted": true},
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
         title: Text(
-          'My Todo',
+          'M y T o d o',
           style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -54,24 +56,26 @@ class _HomeState extends State<Home> {
     });
   }
 
-  createNewTask() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return DialogBox(
-          controller: _controller,
-          onSave: saveNewTask(),
-          onCancel: () => Navigator.of(context).pop(),
-        );
-      },
-    );
+  void createNewTask() {
+    Future.delayed(Duration.zero, () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return DialogBox(
+            controller: _controller,
+            onSave: () => saveNewTask(),
+            onCancel: () => Navigator.of(context).pop(),
+          );
+        },
+      );
+    });
   }
 
   saveNewTask() {
     setState(() {
       toDoList.add({"task": _controller.text, "taskCompleted": false});
-      _controller.clear();
     });
+    _controller.clear();
     Navigator.of(context).pop();
   }
 }
